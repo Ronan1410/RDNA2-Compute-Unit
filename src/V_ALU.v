@@ -1,8 +1,4 @@
-'include "VOP2.v"
-'include "VOP1.v"
-'include "defines.v"
-'include "Vdefines.sv"
-'timescale 1ns/ 1ps
+`timescale 1ns/ 1ps
 
 module V_ALU(
     input wire isntruction[31:0]
