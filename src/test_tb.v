@@ -1,21 +1,20 @@
 `timescale 1ps/1ps
+`include "floats.vh"
 
 module test_tb;
-`include "Vdefines.sv"
 
-reg[31:0] test;
-wire[31:0] boop;
+reg[31:0] test2;
+wire[31:0] boop2;
 
 temp_test temp_test(
-    .test(test),
-    .boop(boop)
+    .test(test2),
+    .boop(boop2)
 );
 
 initial begin
-    test = `pos_inf_32;
-    #1;
-    $display("test=%h boop=%h", test, boop);
-    $finish;
+    test2 = 32'b00000000000000000000000000000000;
+    #(10)
+    test2 = `pos_inf_32;
     end
 
 endmodule
