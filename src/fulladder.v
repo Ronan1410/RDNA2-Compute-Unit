@@ -8,6 +8,8 @@ module fulladder(
     output reg Cout
     );
 
-    assign Sum = A ^ B ^ Cin;
-    assign Cout = (A & B) | (Cin & (A ^ B));
+    always @(*) begin
+        Sum = A ^ B ^ Cin;
+        Cout = (A & B) | (B & Cin) | (A & Cin);
+    end
 endmodule
