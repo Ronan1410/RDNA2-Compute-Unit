@@ -1,7 +1,10 @@
-'include "VOP2.sv"
+'include "VOP2.v"
+'include "VOP1.v"
+'include "defines.v"
+'include "Vdefines.sv"
 'timescale 1ns/ 1ps
 
-module VOP2_ALU(
+module V_ALU(
     input wire isntruction[31:0]
     );
 
@@ -132,8 +135,7 @@ module VOP2_ALU(
                                 //Compute the minimum of two unsigned integers.
                                 //D.u32 = (S0.u32 < S1.u32 ? S0.u32 : S1.u32).
                             end
-        endcase
-        V_MAX_U32       :begin
+            V_MAX_U32       :begin
                                 //Compute the maximum of two unsigned integers.
                                 //D.u32 = (S0.u32 >= S1.u32 ? S0.u32 : S1.u32).
                             end
@@ -294,6 +296,45 @@ module VOP2_ALU(
                                 //value for this opcode.
                                 //D.f16 = S0.f16 * (2 ** S1.i16).
                             end
+            V_FMAC_LEGACY_F32:begin
+                                //Multiply two single-precision values and accumulate the result
+                                //with the destination. Follows DX9 rules where 0.0 times
+                                //anything produces 0.0 (this is not IEEE compliant).
+                                //D.f32 = S0.f32 * S1.f32 + S2.f32. // DX9 rules, 0.0 * x = 0.compliant 
+                            end
+            V_ASHRREV_I32   :begin
+                                //Arithmetic shift right (preserve sign bit) with shift count in the first operand.
+                                //D.i32 = S1.i32 >> S0[4:0]. 
+                            end
+            V_SUBREV_CO_CI_U32:begin
+                                //Subtract the first unsigned integer from the second unsigned
+                                //integer and then subtract a carry-in from VCC. Store the result
+                                //and also save the carry-out to VCC. In VOP3 the VCC destination
+                                //may be an arbitrary SGPR-pair, and the VCC source comes from the
+                                //SGPR-pair at S2.u.
+                                //D.u32 = S1.u32 - S0.u32 - VCC;
+                                //VCC = S1.u32 + VCC > S0.u ? 1 : 0. 
+                            end
+            V_CVT_PKRTZ_F16_F32:begin
+                                //Convert two single-precision floats into a packed FP16 result
+                                //and round to zero (ignore the current rounding mode).
+                                //This opcode is intended for use with 16-bit compressed exports.
+                                //See V_CVT_F16_F32 for a version that respects the current
+                                //rounding mode.
+                                //D.f16_lo = f32_to_f16(S0.f32);
+                                //D.f16_hi = f32_to_f16(S1.f32).
+                                // Round-toward-zero regardless of current round mode setting in hardware.
+                              end      
+            V_PK_FMAC_F16    :begin
+                                //Convert two single-precision floats into a packed FP16 result
+                                //and round to zero (ignore the current rounding mode).
+                                //This opcode is intended for use with 16-bit compressed exports.
+                                //See V_CVT_F16_F32 for a version that respects the current
+                                //rounding mode.
+                                //D.f16_lo = f32_to_f16(S0.f32);
+                                //D.f16_hi = f32_to_f16(S1.f32).
+                                // Round-toward-zero regardless of current round mode setting in hardware.
+                              end
+        endcase
     end
-
 endmodule

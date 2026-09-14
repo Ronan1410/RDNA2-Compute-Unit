@@ -2,13 +2,16 @@
 `define VOP2
 
 `define V_ADD_F16       	 	32'b0
+`define V_FMAC_LEGACY_F32       32'b0
+`define V_ASHRREV_I32           32'b0
+`define V_CVT_PKRTZ_F16_F32     32'b0
+`define V_PK_FMAC_F16           32'b0
 `define V_ADD_F32       	 	32'b0
 `define V_ADD_CO_CI_U32			32'b0
 `define V_ADD_NC_U32			32'b0
 `define V_AND_B32    			32'b0
 `define V_ASHRREV_B32			32'b0
 `define V_CNDMASK_B32 			32'b0
-`define V_CVT_PKRTZ_F16_F32		32'b0
 `define V_FMAAK_F16 			32'b0
 `define V_FMAAK_F32			    32'b0
 `define V_FMAC_F16			    32'b0
