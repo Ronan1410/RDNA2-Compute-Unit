@@ -3,6 +3,6 @@ This project aims to reverse engineer the RDNA2 Compute unit found in AMD's RX60
 
 **TO RUN**
 
- iverilog -g2012 -I. -o test_tb.vvp CSA_test.v CSA.v fulladder.v
+ iverilog -g2012 -I. -o test_tb.vvp tb/CSA_test.v src/CSA.v src/fulladder.v
 
  vvp test_tb.vvp
