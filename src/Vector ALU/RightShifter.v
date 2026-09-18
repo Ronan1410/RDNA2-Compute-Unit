@@ -3,7 +3,7 @@
 module RightShifter(
     input [23:0] A,
     input [7:0] amt,
-    output reg [23:0] out
+    output [23:0] out
 );
 
 wire [23:0] temp[7:0];
@@ -27,11 +27,12 @@ generate
         end
         mux21 mux(.input0(temp[j-1][23]), .inout1(1'b0), .sel(amt[i]), .out(temp[j][23]));
     end
+    //bits 7 of amt
+    for (i = 0; i < 22; i = i + 1)
+    begin
+        mux21 mux(.input0(temp[6][i]), .input1(temp[6][i+1]), .sel(amt[7]), .out(out[23]));
+    end
+    mux21 mux(.input0(temp[6][23]), .input1(1'b0), .sel(amt[7]), .out(out[23]));
 endgenerate
-
-always @(*)
-begin
-    out = temp[23];
-end
 
 endmodule
