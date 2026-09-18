@@ -5,14 +5,70 @@ reg[31:0] A;
 reg[31:0] B;
 wire[31:0] out;
 
+wire NaN_flag;
+wire overflow_flag;
+
 float_adder_32 test(.A(A), .B(B), .out(out));
 
 initial
 begin
     #(10);
     A = 32'b01111111100000000000000000000000;
-    B = 31'b0;
-    $display("A: %b, B: %b, out: %b", A, B, out);
-
+    B = 32'b0;
+    #(10);
+    $display("A = %d, B = %d, out = %d, Nan_flag = %d, overflow = %d", A, B, out, NaN_flag, overflow_flag);
+    
+    #(10);
+    A = 32'b11111111100000000000000000000000;
+    B = 32'b0;
+    #(10);
+    $display("A = %d, B = %d, out = %d, Nan_flag = %d, overflow = %d", A, B, out, NaN_flag, overflow_flag);
+    
+    #(10);
+    A = 32'b11111111100000000000000000000000;
+    B = 32'd1555;
+    #(10);
+    $display("A = %d, B = %d, out = %d, Nan_flag = %d, overflow = %d", A, B, out, NaN_flag, overflow_flag);
+    
+    #(10);
+    B = 32'b01111111100000000000000000000000;
+    A = 32'b0;
+        #(10);
+    $display("A = %d, B = %d, out = %d, Nan_flag = %d, overflow = %d", A, B, out, NaN_flag, overflow_flag);
+    
+    #(10);
+    B = 32'b11111111100000000000000000000000;
+    A = 32'b0;
+    #(10);
+    $display("A = %d, B = %d, out = %d, Nan_flag = %d, overflow = %d", A, B, out, NaN_flag, overflow_flag);
+    
+    #(10);
+    B = 32'b11111111100000000000000000000000;
+    A = 32'd1555;
+    #(10);
+    $display("A = %d, B = %d, out = %d, Nan_flag = %d, overflow = %d", A, B, out, NaN_flag, overflow_flag);
+    
+    #(10);
+    A = 32'b11111111100000000000000000000000;
+    B = 32'b01111111100000000000000000000000;
+    #(10);
+    $display("A = %d, B = %d, out = %d, Nan_flag = %d, overflow = %d", A, B, out, NaN_flag, overflow_flag);
+    
+    #(10);
+    A = 32'b11111111100000000000000000000000;
+    B = 32'b11111111100000000000000000000000;
+    #(10);
+    $display("A = %d, B = %d, out = %d, Nan_flag = %d, overflow = %d", A, B, out, NaN_flag, overflow_flag);
+        #(10);
+    A = 32'b01111111100000000000000000000000;
+    B = 32'b01111111100000000000000000000000;
+    #(10);
+    $display("A = %d, B = %d, out = %d, Nan_flag = %d, overflow = %d", A, B, out, NaN_flag, overflow_flag);
+    
+    #(10);
+    A = 32'b01111111100000000000000000000000;
+    B = 32'b11111111100000000000000000000000;
+    #(10);
+    $display("A = %d, B = %d, out = %d, Nan_flag = %d, overflow = %d", A, B, out, NaN_flag, overflow_flag);
 end
 endmodule
