@@ -21,8 +21,8 @@ module regFile(
 );
 
 reg [31:0] register [255:0];
-always @(posedge clock)
-begin
+    always @ (s0 or s1 or w0 or wv or en_64 or VCCZ_in  or EXEC_in  or SCC_in or EXECZ_in)
+    begin
     if(!s0 == 8'hFF)
     begin
         r0 <= {register[s0 + 1], register[s0]};
