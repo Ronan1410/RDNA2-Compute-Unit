@@ -179,6 +179,10 @@ module float_adder_32(
                 //exponent and sign
                 exp_out <= exp_A;
             end
+            if (sign_A == sign_B)
+            begin
+                sign_out <= sign_A;
+            end
             fraction_out <= norm_significand[22:0];
             out <= {sign_out, norm_exp, fraction_out};
         end
