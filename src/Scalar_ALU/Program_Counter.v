@@ -3,6 +3,7 @@
 module Program_Counter(
     input SET_PC,
     input [7:0] PC_IN,
+    input clock,
     output reg [7:0] PC_OUT
     );
 
