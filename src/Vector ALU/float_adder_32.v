@@ -1,14 +1,5 @@
 `timescale 1ps/1ps
 
-function [23:0] complement2(
-    input hidden_bit,
-    input [22:0] fraction
-);
-begin
-    complement2 = ~{hidden_bit, fraction} + 1;
-end
-endfunction
-
 module float_adder_32(
     input  wire [31:0] A,
     input  wire [31:0] B,
@@ -16,6 +7,15 @@ module float_adder_32(
     output reg NaN_flag,
     output reg overflow_flag
     );
+
+    function [23:0] complement2(
+        input hidden_bit,
+        input [22:0] fraction
+    );
+    begin
+        complement2 = ~{hidden_bit, fraction} + 1;
+    end
+    endfunction
 
     `include "floats.vh"
     // For A
@@ -69,6 +69,8 @@ module float_adder_32(
     RightShift shift(.A(significand_shift), .amt(diff_amt), .out(significand_shifted));
     CSA_23b adder(.A(significand_non_shift), .B(significand_shifted), .Sum(significand_out), .Cout(Cout));
     normalizer norm(.significand(significand_out), .exp(exp_out), .cout(Cout), .norm_sig(norm_significand), .norm_exp(norm_exp));
+
+    reg [23:0] temp_comp;
 
     always @(*)
     begin
@@ -161,14 +163,6 @@ module float_adder_32(
         else
         begin
             $display("in normal");
-            // diff sign            
-            // if (sign_A != sign_B)
-            // begin
-            //      if (sign_A == 1)
-            //      begin
-            //          significand_shift = complement2(hidden_bit_A, fraction_A);
-            //      end
-            // end
             //determining output exponent and calculating exponent difference
             if(Borrow == 1'b1)
             begin
@@ -198,7 +192,21 @@ module float_adder_32(
             end
             if (sign_A == sign_B)
             begin
+                $display("same sign");
                 sign_out <= sign_A;
+            end
+            //diff sign
+            else if (sign_A != sign_B)
+            begin
+                $display("diff sign");
+                if (sign_A == 1'b1)
+                begin
+                    significand_shift <= complement2(hidden_bit_A, fraction_A);
+                end
+                else if (sign_B == 1'b1)
+                begin
+                    significand_shift <= complement2(hidden_bit_B, fraction_B);
+                end
             end
             fraction_out <= norm_significand[22:0];
             out <= {sign_out, norm_exp, fraction_out};
